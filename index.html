@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Cai Junai — a short path from the present to the beginning">
+  <title>Cai Junai</title>
+  <style>
+    :root {
+      --paper: #faf9f6;
+      --ink: #191918;
+      --muted: #706f69;
+      --line: #b8b5ac;
+      --accent: #d94b2b;
+      --rule: rgba(25, 25, 24, 0.14);
+      --page: min(1180px, calc(100vw - 48px));
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--paper);
+      color: var(--ink);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, a { font: inherit; }
+
+    a { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 18px max(24px, calc((100vw - 1180px) / 2));
+      border-bottom: 1px solid var(--rule);
+      background: color-mix(in srgb, var(--paper) 92%, transparent);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      color: var(--ink);
+      font-family: Georgia, "Songti SC", "Noto Serif CJK SC", serif;
+      font-size: 17px;
+      letter-spacing: -0.035em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .site-nav {
+      display: flex;
+      gap: clamp(14px, 2.4vw, 30px);
+      align-items: center;
+    }
+
+    .site-nav a {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-decoration: none;
+    }
+
+    .site-nav a:hover,
+    .site-nav a:focus-visible {
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-underline-offset: 4px;
+    }
+
+    #about,
+    #experience,
+    #projects,
+    #cat,
+    #photography,
+    #elsewhere {
+      scroll-margin-top: 84px;
+    }
+
+    .socials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      pointer-events: auto;
+    }
+
+    .socials a {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0;
+      text-decoration: none;
+    }
+
+    .socials a:hover,
+    .socials a:focus-visible {
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-underline-offset: 4px;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+      align-items: center;
+      justify-content: space-between;
+      gap: clamp(48px, 8vw, 112px);
+      width: var(--page);
+      margin: 0 auto;
+      padding: 88px 0 104px;
+    }
+
+    .hero__copy {
+      width: min(680px, 100%);
+      text-align: left;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Songti SC", "Noto Serif CJK SC", serif;
+      font-size: clamp(44px, 5.4vw, 64px);
+      font-weight: 400;
+      letter-spacing: -0.05em;
+      line-height: 1.02;
+    }
+
+    .hero__intro {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .hero__bio {
+      max-width: 640px;
+      margin: 28px 0 0;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .hero__portrait {
+      width: min(320px, 100%);
+      aspect-ratio: 4 / 5;
+      margin: 2px 0 0;
+      overflow: hidden;
+      background: #deddd7;
+    }
+
+    .hero__portrait img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 46% center;
+      transform: scale(1.12);
+      transform-origin: 50% 60%;
+    }
+
+    .experience {
+      width: var(--page);
+      margin: 0 auto;
+      border-top: 1px solid var(--rule);
+    }
+
+    .experience__summary {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      min-height: 84px;
+      cursor: pointer;
+      list-style: none;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .experience__summary::-webkit-details-marker { display: none; }
+    .experience__summary:focus-visible { outline: 1px dashed var(--line); outline-offset: 5px; }
+
+    .experience__title {
+      margin: 0;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .experience__teaser { flex: 1; color: var(--muted); font-size: 12px; }
+    .experience__years { color: var(--accent); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
+
+    .experience__chevron {
+      width: 8px;
+      height: 8px;
+      margin: 0 4px 4px 2px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      transform: rotate(45deg);
+      transition: transform 180ms ease;
+    }
+
+    .experience[open] .experience__chevron { margin-bottom: -4px; transform: rotate(225deg); }
+
+    .journey {
+      position: relative;
+      width: 100%;
+      min-height: 1980px;
+      margin: 0 auto;
+    }
+
+    .route {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .route--mobile { display: none; }
+
+    .route__ghost,
+    .route__ink {
+      fill: none;
+      vector-effect: non-scaling-stroke;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .route__ghost {
+      stroke: var(--rule);
+      stroke-width: 1.5;
+    }
+
+    .route__ink {
+      stroke: var(--line);
+      stroke-width: 1.5;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+
+    .stop {
+      position: absolute;
+      z-index: 2;
+      width: min(400px, 38vw);
+    }
+
+    .stop--right { left: 53.5%; text-align: left; }
+    .stop--left { right: 53.5%; text-align: right; }
+
+    .stop[data-stop="0"] { top: 32px; }
+    .stop[data-stop="1"] { top: 280px; }
+    .stop[data-stop="2"] { top: 528px; }
+    .stop[data-stop="3"] { top: 776px; }
+    .stop[data-stop="4"] { top: 1024px; }
+    .stop[data-stop="5"] { top: 1272px; }
+    .stop[data-stop="6"] { top: 1520px; }
+    .stop[data-stop="7"] { top: 1768px; }
+
+    .stop[data-stop="0"] { --pin-turn: -4deg; }
+    .stop[data-stop="1"] { --pin-turn: 6deg; }
+    .stop[data-stop="2"] { --pin-turn: -7deg; }
+    .stop[data-stop="3"] { --pin-turn: 3deg; }
+    .stop[data-stop="4"] { --pin-turn: 8deg; }
+    .stop[data-stop="5"] { --pin-turn: -3deg; }
+    .stop[data-stop="6"] { --pin-turn: 5deg; }
+    .stop[data-stop="7"] { --pin-turn: -6deg; }
+
+    .stop__pin {
+      position: absolute;
+      top: 2px;
+      width: 14px;
+      height: 14px;
+      padding: 0;
+      border: 1.5px solid var(--line);
+      border-radius: 50%;
+      background: var(--paper);
+      box-shadow: none;
+      cursor: pointer;
+      transform: rotate(var(--pin-turn, 0deg));
+      transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+    }
+
+    .stop--right .stop__pin { left: -49px; }
+    .stop--left .stop__pin { right: -49px; }
+
+    .stop__pin::before {
+      position: absolute;
+      inset: -3px -2px -2px -3px;
+      border: 1px solid var(--line);
+      border-radius: 54% 46% 52% 48% / 45% 55% 47% 53%;
+      content: "";
+      opacity: 0.48;
+      pointer-events: none;
+      transform: rotate(9deg);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .stop__pin::after {
+      position: absolute;
+      inset: 4px;
+      border-radius: 58% 42% 54% 46% / 44% 57% 43% 56%;
+      background: var(--accent);
+      content: "";
+      opacity: 0;
+      transform: rotate(-11deg) scale(0.25);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .stop:hover .stop__pin,
+    .stop.is-open .stop__pin {
+      background: var(--paper);
+      border-color: var(--ink);
+      transform: rotate(var(--pin-turn, 0deg)) scale(1.03);
+    }
+
+    .stop:hover .stop__pin::before,
+    .stop.is-open .stop__pin::before {
+      opacity: 0.9;
+      transform: rotate(-7deg) scale(1.08);
+    }
+
+    .stop.is-open .stop__pin::after {
+      opacity: 1;
+      transform: rotate(-11deg) scale(1);
+    }
+
+    .stop__pin:focus-visible {
+      outline: 1px dashed var(--line);
+      outline-offset: 6px;
+    }
+
+    .stop__time {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .stop h2 {
+      margin: 0;
+      font-family: Georgia, "Songti SC", "Noto Serif CJK SC", serif;
+      font-size: clamp(20px, 1.8vw, 24px);
+      font-weight: 400;
+      letter-spacing: -0.04em;
+      line-height: 1.12;
+    }
+
+    .stop__role {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .stop__detail {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows 260ms ease, opacity 220ms ease;
+    }
+
+    .stop__detail > div { overflow: hidden; }
+
+    .stop__detail p {
+      margin: 16px 0 0;
+      padding-top: 15px;
+      border-top: 1px solid var(--rule);
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .stop.is-open .stop__detail {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+
+    .footer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      width: var(--page);
+      margin: 0 auto;
+      padding: 56px 0 36px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .footer p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer a {
+      color: var(--ink);
+      font-size: 12px;
+      text-decoration-color: var(--accent);
+      text-underline-offset: 5px;
+    }
+
+    .about {
+      display: grid;
+      grid-template-columns: minmax(120px, 1fr) minmax(320px, 1.15fr);
+      gap: 48px;
+      width: var(--page);
+      margin: 0 auto;
+      padding: 68px 0 80px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .about h2 {
+      margin: 0;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .about__copy {
+      max-width: 560px;
+    }
+
+    .about p {
+      margin: 0 0 14px;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .about p:last-child { margin-bottom: 0; }
+
+    .about a {
+      color: var(--ink);
+      text-decoration-color: var(--accent);
+      text-underline-offset: 4px;
+    }
+
+    .projects {
+      width: var(--page);
+      margin: 0 auto;
+      padding: 68px 0 80px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .projects__heading {
+      margin-bottom: 28px;
+    }
+
+    .projects h2 {
+      margin: 0;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+      gap: 28px clamp(16px, 2vw, 28px);
+    }
+
+    .project-card {
+      display: block;
+      min-width: 0;
+      color: inherit;
+      text-decoration: none;
+      transition: transform 220ms ease;
+    }
+
+    .project-card:hover,
+    .project-card:focus-visible {
+      transform: translateY(-3px);
+    }
+
+    .project-card__media {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      margin-bottom: 10px;
+      overflow: hidden;
+      background: #eeece6;
+    }
+
+    .project-card__media::after {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: grid;
+      width: 30px;
+      height: 30px;
+      place-items: center;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--paper) 94%, transparent);
+      color: var(--ink);
+      content: "↗";
+      font-size: 15px;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .project-card__thumb {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #eeece6;
+      transition: transform 280ms cubic-bezier(.2, .7, .2, 1);
+    }
+
+    .project-card__title::after {
+      display: block;
+      width: 100%;
+      height: 1px;
+      margin-top: 7px;
+      background: var(--accent);
+      content: "";
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 240ms ease;
+    }
+
+    .project-card:hover .project-card__thumb,
+    .project-card:focus-visible .project-card__thumb {
+      transform: scale(1.035);
+    }
+
+    .project-card:hover .project-card__media::after,
+    .project-card:focus-visible .project-card__media::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .project-card:hover .project-card__title::after,
+    .project-card:focus-visible .project-card__title::after {
+      transform: scaleX(1);
+    }
+
+    .project-card--oyster .project-card__thumb {
+      object-fit: contain;
+      background: #020d22;
+    }
+
+    .project-card--music .project-card__thumb {
+      object-fit: contain;
+      background: #000;
+    }
+
+    .project-card--happyworld .project-card__thumb,
+    .project-card--spatial .project-card__thumb {
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .project-card__title {
+      margin: 0;
+      font-family: Georgia, serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    .elsewhere .socials {
+      align-items: center;
+      min-height: 28px;
+    }
+
+    @media (max-width: 720px) {
+      :root { --page: calc(100vw - 36px); }
+
+      html, body { overflow-x: clip; }
+
+      .topbar { padding: 16px 18px; }
+      .brand { font-size: 14px; }
+      .site-nav { gap: 8px; }
+      .site-nav a { font-size: 9px; }
+      .socials { gap: 20px; }
+
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding-top: 56px;
+        padding-bottom: 64px;
+        padding-inline: 0;
+      }
+
+      .hero__copy {
+        width: 100%;
+        text-align: left;
+      }
+      .hero h1 { font-size: clamp(42px, 12vw, 56px); }
+      .hero__intro { margin-left: 0; }
+      .hero__bio { font-size: 14px; }
+
+      .hero__portrait {
+        width: min(280px, 78vw);
+        margin-left: 0;
+      }
+
+      .experience__summary { position:relative; flex-wrap:wrap; gap:7px 12px; min-height:82px; padding:16px 24px 16px 0; }
+      .experience__title { width:100%; }
+      .experience__teaser { flex:1 1 auto; font-size:11px; }
+      .experience__years { font-size:9px; }
+      .experience__chevron { position:absolute; top:28px; right:4px; }
+      .journey { min-height:1980px; overflow-x:clip; }
+
+      .route--desktop { display: none; }
+
+      .route--mobile {
+        display: block;
+        left: -25%;
+        width: 80%;
+        overflow: hidden;
+      }
+
+      .stop,
+      .stop--right,
+      .stop--left {
+        right: auto;
+        left: 25%;
+        width: 68%;
+        text-align: left;
+      }
+
+      .stop[data-stop="0"] { top: 24px; }
+      .stop[data-stop="1"] { top: 270px; }
+      .stop[data-stop="2"] { top: 516px; }
+      .stop[data-stop="3"] { top: 762px; }
+      .stop[data-stop="4"] { top: 1008px; }
+      .stop[data-stop="5"] { top: 1254px; }
+      .stop[data-stop="6"] { top: 1500px; }
+      .stop[data-stop="7"] { top: 1746px; }
+
+      .stop--right .stop__pin,
+      .stop--left .stop__pin {
+        right: auto;
+        left: -44px;
+      }
+
+      .stop h2 { font-size: clamp(19px, 5.3vw, 22px); }
+
+      .projects { padding: 52px 0 64px; }
+
+      .about {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 52px 0 64px;
+      }
+
+      .footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 24px;
+        padding-top: 72px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .route__ink { stroke-dashoffset: 0 !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar" aria-label="Page heading">
+    <a class="brand" href="#about" aria-label="Cai Junai home">Cai Junai</a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#elsewhere">Elsewhere</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="about" aria-labelledby="page-title">
+      <div class="hero__copy">
+        <h1 id="page-title">Cai Junai</h1>
+        <p class="hero__intro">Senior AI Product Manager</p>
+        <p class="hero__bio">I am a Senior AI Product Manager at Alibaba, leading product strategy and execution for the HappyOyster world-model initiative—from model capabilities to user-facing applications. Previously, I built generative AI products at TikTok and Tencent. My earlier work spans HCI, AI, and computer vision research at <a href="https://thfl.tsinghua.edu.cn/en/" target="_blank" rel="noreferrer">Tsinghua Future Lab</a> and <a href="https://vis.cse.ust.hk/" target="_blank" rel="noreferrer">HKUST VIS Lab</a>. I earned my master’s degree at HKUST under <a href="https://facultyprofiles.hkust.edu.hk/profiles.php?profile=huamin-qu-huamin" target="_blank" rel="noreferrer">Prof. Huamin Qu</a> and <a href="https://seng.hkust.edu.hk/about/people/faculty/ajay-joneja" target="_blank" rel="noreferrer">Prof. Ajay Joneja</a>. I turn frontier AI into intuitive products that create real user value.</p>
+      </div>
+      <figure class="hero__portrait" aria-label="Portrait of Cai Junai">
+        <img src="assets/cai-junai-profile.jpg" alt="Portrait of Cai Junai in a sunlit arcade" width="5472" height="3648" fetchpriority="high">
+      </figure>
+    </section>
+
+    <details class="experience" id="experience">
+      <summary class="experience__summary">
+        <h2 class="experience__title">Experience</h2>
+        <span class="experience__teaser">Alibaba · TikTok · Tencent · Tsinghua</span>
+        <span class="experience__years">2018 — Present</span>
+        <span class="experience__chevron" aria-hidden="true"></span>
+      </summary>
+      <section class="journey" aria-label="Career path from the present back to the first internship">
+      <svg class="route route--desktop" viewBox="0 0 1000 2240" preserveAspectRatio="none" aria-hidden="true">
+        <path class="route__ghost" pathLength="1"
+          d="M 500 0 C 500 150, 530 260, 500 410 S 475 650, 505 800 S 530 1050, 500 1200 S 475 1450, 505 1600 S 525 1900, 500 2180"/>
+        <path class="route__ink" pathLength="1"
+          d="M 500 0 C 500 150, 530 260, 500 410 S 475 650, 505 800 S 530 1050, 500 1200 S 475 1450, 505 1600 S 525 1900, 500 2180"/>
+      </svg>
+
+      <svg class="route route--mobile" viewBox="0 0 1000 2160" preserveAspectRatio="none" aria-hidden="true">
+        <path class="route__ghost" pathLength="1"
+          d="M 500 0 C 500 170, 520 300, 500 450 S 480 720, 500 900 S 520 1170, 500 1350 S 480 1620, 500 1800 S 510 2020, 500 2110"/>
+        <path class="route__ink route__ink--mobile" pathLength="1"
+          d="M 500 0 C 500 170, 520 300, 500 450 S 480 720, 500 900 S 520 1170, 500 1350 S 480 1620, 500 1800 S 510 2020, 500 2110"/>
+      </svg>
+
+      <article class="stop stop--right" data-stop="0">
+        <button class="stop__pin" type="button" aria-expanded="false" aria-label="Expand Alibaba role"></button>
+        <span class="stop__time">2026 — Present</span>
+        <h2>Senior Model Product Manager</h2>
+        <p class="stop__role">Alibaba ATH · Asia</p>
+        <div class="stop__detail"><div>
+          <p>Leading product strategy and execution for the HappyOyster world-model initiative.</p>
+        </div></div>
+      </article>
+
+      <article class="stop stop--left" data-stop="1">
+        <button class="stop__pin" type="button" aria-expanded="false" aria-label="Expand TikTok role"></button>
+        <span class="stop__time">2025 — 2026</span>
+        <h2>AI Product Manager</h2>
+        <p class="stop__role">TikTok · Shanghai</p>
+        <div class="stop__detail"><div>
+          <p>Built generative AI products for content creation.</p>
+        </div></div>
+      </article>
+
+      <article class="stop stop--right" data-stop="2">
+        <button class="stop__pin" type="button" aria-expanded="false" aria-label="Expand Tencent AI role"></button>
+        <span class="stop__time">2022 — 2025</span>
+        <h2>AI Product Manager</h2>
+        <p class="stop__role">Tencent · Shenzhen</p>
+        <div class="stop__detail"><div>
+          <p>Built ima and other generative AI products.</p>
+        </div></div>
+      </article>
+
+      <article class="stop stop--left" data-stop="3">
+        <button class="stop__pin" type="button" aria-expanded="false" aria-label="Expand Logitech internship"></button>
+        <span class="stop__time">2021</span>
+        <h2>Product Manager Intern</h2>
+        <p class="stop__role">Logitech · Hong Kong</p>
+        <div class="stop__detail"><div>
+          <p>Product management internship.</p>
+        </div></div>
+      </article>
+
+      <article class="stop stop--right" data-stop="4">
+        <button class="stop__pin" type="button" aria-expanded="false" aria-label="Expand HKUST research role"></button>
+        <span class="stop__time">2021</span>
+        <h2>Research Assistant · VIS Lab</h2>
+        <p class="stop__role">HKUST · Hong Kong</p>
+        <div class="stop__detail"><div>
+          <p>Conducted HCI research related to computer vision under the supervision of <a href="https://facultyprofiles.hkust.edu.hk/profiles.php?profile=huamin-qu-huamin" target="_blank" rel="noreferrer">Prof. Huamin Qu ↗</a>.</p>
+        </div></div>
+      </article>
+
+      <article class="stop stop--left" data-stop="5">
+        <button class="stop__pin" type="button" aria-expanded="false" aria-label="Expand Tencent ML Platform internship"></button>
+        <span class="stop__time">2021</span>
+        <h2>AI Product Manager Intern · ML Platform</h2>
+        <p class="stop__role">Tencent · Shenzhen</p>
+        <div class="stop__detail"><div>
+          <p>Worked on machine learning platforms and MLOps.</p>
+        </div></div>
+      </article>
+
+      <article class="stop stop--right" data-stop="6">
+        <button class="stop__pin" type="button" aria-expanded="false" aria-label="Expand SenseTime product manager internship"></button>
+        <span class="stop__time">2020 — 2021</span>
+        <h2>AI Product Manager Intern</h2>
+        <p class="stop__role">SenseTime · Beijing</p>
+        <div class="stop__detail"><div>
+          <p>Product management internship.</p>
+        </div></div>
+      </article>
+
+      <article class="stop stop--left" data-stop="7">
+        <button class="stop__pin" type="button" aria-expanded="false" aria-label="Expand Tsinghua Future Lab research role"></button>
+        <span class="stop__time">2018 — 2020</span>
+        <h2>Research Intern · Future Lab</h2>
+        <p class="stop__role">Tsinghua University · Beijing</p>
+        <div class="stop__detail"><div>
+          <p>Researched intelligent spaces, human–AI interaction, and AI dynamic environments.</p>
+        </div></div>
+      </article>
+
+      </section>
+    </details>
+
+    <section class="projects" id="projects" aria-labelledby="projects-title">
+      <div class="projects__heading">
+        <h2 id="projects-title">Projects</h2>
+      </div>
+      <div class="project-grid">
+        <a class="project-card project-card--happyworld" href="https://arxiv.org/abs/2609.24308" target="_blank" rel="noreferrer" aria-label="HappyWorld-Bench — open project paper">
+          <span class="project-card__media"><img class="project-card__thumb" src="assets/projects/happyworld-bench-cover.png" alt="HappyWorld-Bench benchmark capability, application-domain, rollout-duration, coverage, and resolution overview"></span>
+          <h3 class="project-card__title">HappyWorld-Bench</h3>
+        </a>
+        <a class="project-card project-card--oyster" href="https://www.happyoyster.com/" target="_blank" rel="noreferrer" aria-label="Happy Oyster — open official website">
+          <span class="project-card__media"><img class="project-card__thumb" src="assets/projects/happy-oyster-thumb.png" alt="Happy Oyster website cover: The world is your oyster, open it."></span>
+          <h3 class="project-card__title">Happy Oyster</h3>
+        </a>
+        <a class="project-card project-card--music" href="https://www.soundon.global/melor?lang=en" target="_blank" rel="noreferrer" aria-label="TikTok Music — open Melor on SoundOn">
+          <span class="project-card__media"><img class="project-card__thumb" src="assets/projects/tiktok-music-ai-mv.png" alt="SoundOn Melor music video, Spotify Canvas, and album cover tools"></span>
+          <h3 class="project-card__title">TikTok Music</h3>
+        </a>
+        <a class="project-card" href="https://ima.tencent.com/download" target="_blank" rel="noreferrer" aria-label="ima — open official website">
+          <span class="project-card__media"><img class="project-card__thumb" src="https://fe-img.ima.myqcloud.com/wupload/xy/ima_tool/sbrQoLax.jpg" alt="Product demonstration from the official ima website"></span>
+          <h3 class="project-card__title">ima</h3>
+        </a>
+        <a class="project-card project-card--spatial" href="https://doi.org/10.1145/3491102.3517637" target="_blank" rel="noreferrer" title="Establishing Design Consensus toward Next-Generation Retail: Data-Enabled Design Exploration and Participatory Analysis" aria-label="Establishing Design Consensus toward Next-Generation Retail: Data-Enabled Design Exploration and Participatory Analysis">
+          <span class="project-card__media"><img class="project-card__thumb" src="assets/projects/retail-design-consensus.png" alt="Paper figures showing the data-enabled design process and the store's spatial layout"></span>
+          <h3 class="project-card__title">Spatial Intelligence and Design Consensus in Retail</h3>
+        </a>
+      </div>
+    </section>
+
+    <section class="about elsewhere" id="elsewhere" aria-labelledby="elsewhere-title">
+      <h2 id="elsewhere-title">Elsewhere</h2>
+      <nav class="socials" aria-label="Social links">
+        <a href="mailto:shalacaiii@gmail.com">Email ↗</a>
+        <a href="https://www.linkedin.com/in/jacaiii/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+        <a href="https://x.com/saruacai" target="_blank" rel="noreferrer">X ↗</a>
+        <a href="https://xhslink.cn/o/2n2gzviGMl2" target="_blank" rel="noreferrer">Xiaohongshu ↗</a>
+      </nav>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Cai Junai<br>2026</p>
+  </footer>
+
+  <script>
+    const experience = document.querySelector('.experience');
+    const journey = document.querySelector('.journey');
+    const routes = document.querySelectorAll('.route__ink');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function setStopOpen(stop, isOpen) {
+      stop.classList.toggle('is-open', isOpen);
+      stop.querySelector('.stop__pin').setAttribute('aria-expanded', String(isOpen));
+    }
+
+    function drawRoute() {
+      if (!experience.open) return;
+      if (reducedMotion.matches) {
+        routes.forEach((route) => { route.style.strokeDashoffset = '0'; });
+        return;
+      }
+
+      const rect = journey.getBoundingClientRect();
+      const viewport = window.innerHeight;
+      const travelled = Math.min(Math.max(viewport * 0.56 - rect.top, 0), rect.height);
+      const progress = travelled / rect.height;
+      routes.forEach((route) => { route.style.strokeDashoffset = String(1 - progress); });
+
+    }
+
+    document.querySelectorAll('.stop__pin').forEach((pin) => {
+      pin.addEventListener('click', () => {
+        const stop = pin.closest('.stop');
+        setStopOpen(stop, !stop.classList.contains('is-open'));
+      });
+    });
+
+    experience.addEventListener('toggle', drawRoute);
+    drawRoute();
+    window.addEventListener('scroll', drawRoute, { passive: true });
+    window.addEventListener('resize', drawRoute);
+  </script>
+</body>
+</html>
