@@ -860,6 +860,7 @@
     const journey = document.querySelector('.journey');
     const routes = document.querySelectorAll('.route__ink');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const pendingStops = new Set(document.querySelectorAll('.stop'));
 
     function setStopOpen(stop, isOpen) {
       stop.classList.toggle('is-open', isOpen);
@@ -868,14 +869,24 @@
 
     function drawRoute() {
       if (!experience.open) return;
+
+      const viewport = window.innerHeight;
+      const revealLine = viewport * 0.56;
+      pendingStops.forEach((stop) => {
+        const pin = stop.querySelector('.stop__pin');
+        if (pin.getBoundingClientRect().top <= revealLine) {
+          setStopOpen(stop, true);
+          pendingStops.delete(stop);
+        }
+      });
+
       if (reducedMotion.matches) {
         routes.forEach((route) => { route.style.strokeDashoffset = '0'; });
         return;
       }
 
       const rect = journey.getBoundingClientRect();
-      const viewport = window.innerHeight;
-      const travelled = Math.min(Math.max(viewport * 0.56 - rect.top, 0), rect.height);
+      const travelled = Math.min(Math.max(revealLine - rect.top, 0), rect.height);
       const progress = travelled / rect.height;
       routes.forEach((route) => { route.style.strokeDashoffset = String(1 - progress); });
 
@@ -884,6 +895,8 @@
     document.querySelectorAll('.stop__pin').forEach((pin) => {
       pin.addEventListener('click', () => {
         const stop = pin.closest('.stop');
+        // Keep the user's choice when they toggle a stop manually.
+        pendingStops.delete(stop);
         setStopOpen(stop, !stop.classList.contains('is-open'));
       });
     });
